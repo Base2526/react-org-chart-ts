@@ -26,6 +26,7 @@ interface OrgChartProps {
   resetPositionId?: string;
   minZoom?: number;
   maxZoom?: number;
+  lineType?: string; // angle, curve
   onConfigChange: (config: any) => void;
   loadConfig: (d: any) => any;
   loadImage: (data: any) => Promise<string>;

@@ -17,8 +17,8 @@ const margin = {
 }
 
 // Lines
-const lineType = 'angle'
-const lineDepthY = 120 /* Height of the line for child nodes */
+const lineType = 'angle'; // angle, curve
+const lineDepthY = 120; /* Height of the line for child nodes */
 
 // Colors
 const backgroundColor = 'lightblue'
