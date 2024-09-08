@@ -3,7 +3,7 @@
   "version": "0.0.1-beta",
   "private": true,
   "dependencies": {
-    "@simple/react-org-chart-ts": "file:..",
+    "@somkid.sim/react-org-chart-ts": "^0.0.3-beta",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
