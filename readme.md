@@ -46,9 +46,7 @@ What we added:
 | loadChildren (personData)      | `Function` | Load the children of particular node (Optional)                           | See usage below                                                  |
 | onConfigChange    | `Function` | To set the latest config to state on change                               | See usage below                                                  |
 | loadConfig        | `Function` | Pass latest config from state to OrgChart                                    | See usage below                                                  |
-| loadImage(personData)         | `Function` | To get image of person on API call (Optional)                             | See usage below                                                  |
-
-NEW 
+| loadImage(personData)         | `Function` | To get image of person on API call (Optional)                             | See usage below                                                  | 
 | resetPositionId         | `String` | To get image of person on API call (Optional)                             | See usage below                                                  |
 | minZoom         | `float` | To get image of person on API call (Optional)                             | See usage below                                                  |
 | maxZoom         | `float` | To get image of person on API call (Optional)                             | See usage below                                                  |
