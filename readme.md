@@ -1,5 +1,5 @@
 # react-org-chart-ts
-[![npm version](https://badge.fury.io/js/%40unicef%2Freact-org-chart.svg)](https://badge.fury.io/js/%40unicef%2Freact-org-chart)
+[![npm version](https://badge.fury.io/js/@somkid.sim%2Freact-org-chart-ts.svg)](https://badge.fury.io/js/@somkid.sim%2Freact-org-chart-ts)
 
 React component for displaying organizational charts.
 
