@@ -43,7 +43,7 @@ export default function renderLines(config = {}) {
       .attr('fill', 'none')
       .attr('stroke', '#A9A9A9')
       .attr('stroke-opacity', 1)
-      .attr('stroke-width', 1.25)
+      .attr('stroke-width', 1)
       .attr('d', d => {
         const linePoints = [
           {
@@ -64,6 +64,7 @@ export default function renderLines(config = {}) {
           },
         ]
 
+        console.log('linePoints :', linePoints)
         return angle(linePoints)
       })
 

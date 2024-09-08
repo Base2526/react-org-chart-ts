@@ -224,16 +224,17 @@ export default function init(options) {
 
       return
     }
-    var clicked = d3.event.target,
-      direction = 1,
-      factor = 0.2,
-      target_zoom = 1,
-      center = [elemWidth / 2, elemHeight / 2],
-      extent = zoom.scaleExtent(),
-      translate = zoom.translate(),
-      translate0 = [],
-      l = [],
-      view = { x: translate[0], y: translate[1], k: zoom.scale() }
+
+    var clicked = d3.event && d3.event.target;
+    var direction = 1;
+    var factor = 0.2;
+    var target_zoom = 1;
+    var center = [elemWidth / 2, elemHeight / 2];
+    var extent = zoom.scaleExtent();
+    var translate = zoom.translate();
+    var translate0 = [];
+    var l = [];
+    var view = { x: translate[0], y: translate[1], k: zoom.scale() };
 
     d3.event && d3.event.preventDefault()
     direction = this.id === zoomInId ? 1 : -1

@@ -48,43 +48,32 @@ What we added:
 | loadConfig        | `Function` | Pass latest config from state to OrgChart                                    | See usage below                                                  |
 | loadImage(personData)         | `Function` | To get image of person on API call (Optional)                             | See usage below                                                  |
 
+NEW 
+| resetPositionId         | `String` | To get image of person on API call (Optional)                             | See usage below                                                  |
+| minZoom         | `float` | To get image of person on API call (Optional)                             | See usage below                                                  |
+| maxZoom         | `float` | To get image of person on API call (Optional)                             | See usage below                                                  |
+| showDetail(personData)         | `Function` | To get image of person on API call (Optional)                             | See usage below                                                  |
 
 
 ### Sample tree data
 
 ```jsx
+interface Person {
+  id: number;
+  avatar: string;
+  department: string;
+  name: string;
+  title: string;
+  totalReports: number;
+  color?: string;
+}
 
-{
-  id: 1,
-  person: {
-    id: 1,
-    avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/spbroma/128.jpg',
-    department: '',
-    name: 'Jane Doe',
-    title: 'CEO',
-    totalReports: 5
-  },
-  hasChild: true,
-  hasParent: false,
-  isHighlight: true,
-  children: [
-    {
-    id: 2,
-    person: {
-      id: 2,
-      avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/spbroma/128.jpg',
-      department: '',
-      name: 'John Foo',
-      title: 'CTO',
-      totalReports: 0
-    },
-    hasChild: false,
-    hasParent: true,
-    isHighlight: false,
-    children: []
-  },
-  ...
-  ]
+interface Node {
+  id: number;
+  person: Person;
+  hasChild: boolean;
+  hasParent: boolean;
+  children: Node[];
 }
 
 ```
@@ -94,49 +83,119 @@ What we added:
 You have a complete working example in the **[examples/](https://github.com/unicef/react-org-chart/tree/master/examples)** folder 
 
 ```jsx
-import React from 'react'
-import OrgChart from '@sim/react-org-chart-ts'
+import React, { useState, useEffect } from 'react';
 
-handleLoadConfig = () => {
-   const { config } = this.state
-   return config
-}
+import OrgChart from '@simple/react-org-chart-ts'
+import photo from './assets/logo192.png'
+import { generateTreeData } from "./faker"
+import { Node, TreeNode } from "./interface" 
 
-render(){
-  return (
-    <OrgChart
-      tree={tree}
-      downloadImageId="download-image"
-      downloadPdfId="download-pdf"
-      onConfigChange={config => {
-        // Setting latest config to state
-        this.setState({ config: config })
-      }}
-      loadConfig={d => {
-         // Called from d3 to get latest version of the config. 
-        const config = this.handleLoadConfig(d)
-        return config
-      }}
-      loadParent={personData => {
-        // getParentData(): To get the parent data from API
-        const loadedParent = this.getParentData(personData)
-        return Promise.resolve(loadedParent)
-      }}
-      loadChildren={personData => {
-        // getChildrenData(): To get the children data from API
-        const loadedChildren = this.getChildrenData(personData)
-        return Promise.resolve(loadedChildren)
-      }}
-      loadImage={personData => {
-        // getImage(): To get the image from API
-        const image = getImage(personData.email)
-        return Promise.resolve(image)
-      }}
-    />
-  )
-}
+let  confg = {}
+const App: React.FC = () => {
+  const [treeData, setTreeData] = useState<TreeNode[]>([]);
+
+  useEffect(()=>{
+    // // 1 top-level node, 2 children per node, 4 levels deep
+    setTreeData(generateTreeData(1, 7, 2));
+  }, [])
+ 
+  return  <div>
+            <div className="zoom-buttons">
+              <button
+                className="btn btn-outline-primary zoom-button"
+                id="zoom-in"
+              >+</button>
+              <button
+                className="btn btn-outline-primary zoom-button"
+                id="zoom-out"
+              >-</button>
+              <button
+                className="btn btn-outline-primary zoom-button"
+                id="reset-position"
+              >R</button>
+            </div>
+            {treeData.length > 0 &&   
+            <OrgChart 
+              tree={treeData[0]}
+              zoomInId= {"zoom-in"}
+              zoomOutId= {"zoom-out"}
+              resetPositionId= {"reset-position"}
+              // minZoom={0.01}
+              // lineType={'curve'}
+              loadConfig={(d: any) => {
+                return confg
+              }}
+              onConfigChange={(config: any) => {
+                confg = config
+              }}
+              loadImage={(d : Node) => {
+                return Promise.resolve(photo)
+              }}
+              loadParent={(d : Node) => {
+                console.log("loadParent :", d)
+                return []
+              }}
+              loadChildren={(d : Node) => {
+                console.log("loadChildren :", d)
+                return []
+              }} 
+              showDetail={(d : Node) => {
+                console.log("showDetail :", d)
+              }}
+              />}
+          </div>
+};
+
+export default App;
 ```
 
+# File .d.ts
+```
+declare module '@simple/react-org-chart-ts' {
+    import { ComponentType } from 'react';
+  
+    interface Person {
+        id: number;
+        avatar: string;
+        department: string;
+        name: string;
+        title: string;
+        totalReports: number;
+        color?: string;
+    }
+    
+    interface Node {
+        id: number;
+        person: Person;
+        hasChild: boolean;
+        hasParent: boolean;
+        children: Node[];
+    }
+    
+    interface OrgChartProps {
+        tree: Node;
+        defualtConfig?: any;
+        zoomInId?: string;
+        zoomOutId?: string;
+        resetPositionId?: string;
+        minZoom?: number;
+        maxZoom?: number;
+        lineType?: string; // angle, curve
+        onConfigChange: (config: any) => void;
+        loadConfig: (d: any) => any;
+        loadImage: (data: any) => Promise<string>;
+        loadParent: (d: any) => any;
+        loadChildren: (d: any) => any;
+        showDetail?: (d: any) => void;  
+    }
+
+    declare class OrgChart extends React.Component<OrgChartProps> {
+        render(): JSX.Element;
+    }
+    
+    export default OrgChart;
+}
+```
 
 # Development
 

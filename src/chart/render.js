@@ -1,4 +1,7 @@
 import * as d3 from 'd3';
+// import ReactDOM from 'react-dom';
+// import { SmileOutlined, DownOutlined } from '@ant-design/icons';
+
 import { wrapText, helpers, covertImageToBase64 } from '../utils';
 import renderLines from './renderLines';
 import exportOrgChartImage from './exportOrgChartImage';
@@ -144,6 +147,24 @@ export default function render(config) {
         .style('opacity', 1); // Restore opacity
     })
 
+
+  // example add icon to d3 
+  // import ReactDOM from 'react-dom';
+  // import { SmileOutlined } from '@ant-design/icons';
+  // nodeEnter.append('foreignObject')
+  // .attr('width', 30)
+  // .attr('height', 30)
+  // .attr('x', nodeWidth /2 - 30 / 2)  // Position it 30 units from the right edge
+  // .attr('y', nodeHeight - 30/2)  // Position it 30 units from the bottom edge
+  // .each(function() {
+  //   const node = d3.select(this);
+  //   const div = document.createElement('div');
+  //   node.node().appendChild(div);
+  //   // Create a root and render the React component
+  //   const root = ReactDOM.createRoot(div);
+  //   root.render(<SmileOutlined style={{ fontSize: '24px', color: 'blue' }} />);
+  // });
+
   // Person's Title
   nodeEnter
     .append('text')
@@ -182,8 +203,39 @@ export default function render(config) {
     .style('fill', reportsColor)
     .text(helpers.getTextForTitle)
 
+  ////////
+  const longPressDuration = 200; // duration for long press in ms
+  let pressTimer;
+  const handleMouseDown = (node) => {
+    // Start the timer on mouse down
+    pressTimer = setTimeout(() => {
+      // Trigger the long-press action
+      console.log('Long press detected on node:', node);
+
+      d3.event && d3.event.stopPropagation()
+
+      if(config){
+        let { showDetail } = config
+        showDetail(node)
+      }
+
+      // You can add additional actions here, e.g., showing a context menu
+    }, longPressDuration);
+  };
+  
+  const handleMouseUp = () => {
+    // Clear the timer on mouse up (if the press is shorter than the long press duration)
+    clearTimeout(pressTimer);
+  };
+  
+  const handleMouseLeave = () => {
+    // Clear the timer if the mouse leaves the element
+    clearTimeout(pressTimer);
+  };
+
+  ////////
   // Person's Avatar
-  const image = nodeEnter
+  nodeEnter
     .append('image')
     .attr('id', d => `image-${d.id}`)
     .attr('width', avatarWidth)
@@ -209,15 +261,13 @@ export default function render(config) {
     .attr('href', d => d.person.avatar)
     .attr('clip-path', 'url(#avatarClip)')
     .style('border', '2px solid black') // Initial border style
-
-    .on('click', (node)=>{ 
-      d3.event && d3.event.stopPropagation()
-
-      if(config){
-        let { showDetail } = config
-        showDetail(node)
-      }
-    })
+    // .on('click', (node)=>{ 
+    //   d3.event && d3.event.stopPropagation()
+    //   if(config){
+    //     let { showDetail } = config
+    //     showDetail(node)
+    //   }
+    // })
     .on('mouseover', function(event, d) {
       d3.select(this)
       .style('border', '4px solid blue') // Change border on mouseover
@@ -228,6 +278,9 @@ export default function render(config) {
         .style('border', '2px solid black') // Revert border on mouseout
         .style('opacity', 1); // Restore opacity
     })
+    .on('mousedown', handleMouseDown) // Detect press start
+    .on('mouseup', handleMouseUp) // Detect press end
+    .on('mouseleave', handleMouseLeave); // Clear the press if the user moves away from the element;
 
   // Person's Link
   const nodeLink = nodeEnter
@@ -242,6 +295,37 @@ export default function render(config) {
         onPersonLinkClick(datum, d3.event)
       }
     })
+
+  // Draw a dot
+  // nodeEnter.append('circle')
+  //   .attr('cx', nodeWidth/2) // X position
+  //   .attr('cy', nodeHeight) // Y position
+  //   .attr('r', 10) // Radius
+  //   .style('fill', 'blue'); // Fill color
+
+  // example add icon to d3 
+  // import ReactDOM from 'react-dom';
+  // import { SmileOutlined } from '@ant-design/icons';
+  // let widthL = 30;
+  // nodeEnter.append('foreignObject')
+  // .attr('width', widthL)
+  // .attr('height', widthL)
+  // .attr('x', (nodeWidth / 2) - (widthL / 2) ) 
+  // .attr('y', nodeHeight - ( widthL / 2) ) 
+  // .each(function() {
+  //   const node = d3.select(this);
+  //   const div = document.createElement('div');
+  //   div.style.width = `${widthL}px`;
+  //   div.style.height = `${widthL}px`;
+  //   div.style.display = 'flex';
+  //   div.style.alignItems = 'center';
+  //   div.style.justifyContent = 'center';
+  //   node.node().appendChild(div);
+    
+  //   // Create a root and render the React component
+  //   const root = ReactDOM.createRoot(div);
+  //   root.render(<DownOutlined style={{ fontSize: '10px' }} />);
+  // });
 
   iconLink({
     svg: nodeLink,
@@ -306,4 +390,6 @@ export default function render(config) {
     exportOrgChartPdf(config)
   })
   onConfigChange(config)
+
+
 }
