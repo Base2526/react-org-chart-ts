@@ -5,7 +5,8 @@ React component for displaying organizational charts.
 
 This component is based on [coreseekdev/react-org-chart](https://github.com/coreseekdev/react-org-chart). On top of it, we added a few customization to fulfill our requirements.
 
-### [View demo](https://unicef.github.io/react-org-chart/)
+### [Example GIF]
+![](example/01.gif)
 
 
 # Features
@@ -83,7 +84,7 @@ You have a complete working example in the **[examples/](https://github.com/unic
 ```jsx
 import React, { useState, useEffect } from 'react';
 
-import OrgChart from '@simple/react-org-chart-ts'
+import OrgChart from '@somkid.sim/react-org-chart-ts'
 import photo from './assets/logo192.png'
 import { generateTreeData } from "./faker"
 import { Node, TreeNode } from "./interface" 
@@ -149,7 +150,7 @@ export default App;
 
 # File .d.ts
 ```
-declare module '@simple/react-org-chart-ts' {
+declare module '@somkid.sim/react-org-chart-ts' {
     import { ComponentType } from 'react';
   
     interface Person {
