@@ -1,4 +1,4 @@
-declare module '@simple/react-org-chart-ts' {
+declare module '@somkid.sim/react-org-chart-ts' {
     import { ComponentType } from 'react';
   
     interface Person {

@@ -1,6 +1,6 @@
 {
   "name": "@somkid.sim/react-org-chart-ts",
-  "version": "0.0.2-beta",
+  "version": "0.0.3-beta",
   "description": "Simple, high-performance react component for d3 org chart",
   "main": "dist/index.js",
   "files": [
